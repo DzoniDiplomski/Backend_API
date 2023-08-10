@@ -11,7 +11,7 @@ import (
 var productService = &service.ProductService{}
 
 func AddProduct(c *gin.Context) {
-	var products []model.Product
+	var products []model.ProductFromSearch
 
 	if err := c.BindJSON(&products); err != nil {
 		c.Status(400)
