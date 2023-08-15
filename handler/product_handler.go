@@ -3,15 +3,15 @@ package handler
 import (
 	"net/http"
 
-	"diplomski.com/model"
-	"diplomski.com/service"
+	"github.com/DzoniDiplomski/Backend_API/model"
+	"github.com/DzoniDiplomski/Backend_API/service"
 	"github.com/gin-gonic/gin"
 )
 
 var productService = &service.ProductService{}
 
 func AddProduct(c *gin.Context) {
-	var products []model.ProductFromSearch
+	var products []model.Product
 
 	if err := c.BindJSON(&products); err != nil {
 		c.Status(400)

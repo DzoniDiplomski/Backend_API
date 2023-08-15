@@ -1,14 +1,14 @@
 package repo
 
 import (
-	"diplomski.com/db"
-	"diplomski.com/model"
+	"github.com/DzoniDiplomski/Backend_API/db"
+	"github.com/DzoniDiplomski/Backend_API/model"
 )
 
 type ProductRepo struct {
 }
 
-func (productRepo *ProductRepo) AddProducts(products []model.ProductFromSearch) error {
+func (productRepo *ProductRepo) AddProducts(products []model.Product) error {
 	tx, err := db.DBConn.Begin()
 	if err != nil {
 		return err

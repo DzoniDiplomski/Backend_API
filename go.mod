@@ -1,4 +1,4 @@
-module diplomski.com
+module github.com/DzoniDiplomski/Backend_API
 
 go 1.20
 

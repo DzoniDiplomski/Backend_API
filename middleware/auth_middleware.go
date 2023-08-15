@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"diplomski.com/utils"
+	"github.com/DzoniDiplomski/Backend_API/utils"
 	"github.com/gin-gonic/gin"
 )
 

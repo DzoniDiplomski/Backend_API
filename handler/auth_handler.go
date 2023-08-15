@@ -3,9 +3,9 @@ package handler
 import (
 	"database/sql"
 
-	"diplomski.com/model"
-	"diplomski.com/service"
-	"diplomski.com/utils"
+	"github.com/DzoniDiplomski/Backend_API/model"
+	"github.com/DzoniDiplomski/Backend_API/service"
+	"github.com/DzoniDiplomski/Backend_API/utils"
 	"github.com/gin-gonic/gin"
 )
 

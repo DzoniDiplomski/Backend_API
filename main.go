@@ -1,9 +1,9 @@
 package main
 
 import (
-	"diplomski.com/db"
-	"diplomski.com/server"
-	"diplomski.com/utils"
+	"github.com/DzoniDiplomski/Backend_API/db"
+	"github.com/DzoniDiplomski/Backend_API/server"
+	"github.com/DzoniDiplomski/Backend_API/utils"
 )
 
 func main() {

@@ -1,6 +1,6 @@
 package model
 
-type ProductFromSearch struct {
+type Product struct {
 	Id       int     `json:"sif"`
 	Barcode  string  `json:"bc"`
 	Name     string  `json:"naz"`

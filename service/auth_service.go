@@ -1,8 +1,8 @@
 package service
 
 import (
-	"diplomski.com/db"
-	"diplomski.com/model"
+	"github.com/DzoniDiplomski/Backend_API/db"
+	"github.com/DzoniDiplomski/Backend_API/model"
 )
 
 type AuthService struct {

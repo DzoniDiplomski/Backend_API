@@ -12,3 +12,8 @@ WHERE c."pocetak_vazenja" <= CURRENT_DATE
   AND c."kraj_vazenja" >= CURRENT_DATE
   AND a."naz" ILIKE $1;
 `
+var PSAddReceipt = "INSERT INTO fiskalni_racun (radi_kasa_trafika_id, radi_kasa_id) VALUES ($1, $2) RETURNING id"
+var PSCreateReceiptItem = "INSERT INTO stavka (kol, zaprima_sadrzi_4_artikal_sif, cena) VALUES ($1, $2, $3) RETURNING id"
+var PSBindItemWithReceipt = "INSERT INTO sadrzi_3 (fiskalni_racun_id, stavka_id) VALUES ($1, $2)"
+var PSBindReceiptWithCashier = "INSERT INTO izdaje (id_racuna, jmbg_kasira) VALUES ($1, $2)"
+var PSDeleteReceipt = "DELETE FROM fiskalni_racun WHERE id = $1"
