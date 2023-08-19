@@ -1,13 +1,12 @@
 package server
 
 import (
-	"github.com/DzoniDiplomski/Backend_API/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func RunServer() {
 	r := gin.Default()
-	r.Use(middleware.AuthMiddleware)
+	// r.Use(middleware.AuthMiddleware)
 	initRoutes(r)
 	r.Run(":8080")
 }

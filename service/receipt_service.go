@@ -67,3 +67,44 @@ func addItemsToDBAndBindWithReceipt(receipt model.ReceiptDTO, tx *sql.Tx, receip
 	}
 	return nil
 }
+
+func (receiptService *ReceiptService) GetReceiptsWithLimit(offset int, limit int) ([]model.AllReceiptsDTO, error) {
+	rows, err := db.DBConn.Query(db.PSGetAllReceipts, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	var receipts []model.AllReceiptsDTO
+	for rows.Next() {
+		var receipt model.AllReceiptsDTO
+		if err := rows.Scan(&receipt.Id, &receipt.CreatedAt, &receipt.ShopName, &receipt.CashierName, &receipt.CashierLastName); err != nil {
+			return nil, err
+		}
+		receipts = append(receipts, receipt)
+	}
+
+	return receipts, nil
+}
+
+func (receiptService *ReceiptService) CalculatePagesForAllReceipts(itemsPerPage int) (model.AllReceiptsPages, error) {
+	var count int
+	err := db.DBConn.QueryRow(db.PSCountAllReceipts).Scan(&count)
+	if err != nil {
+		return model.AllReceiptsPages{}, err
+	}
+
+	numberOfPages := count / itemsPerPage
+	if numberOfPages != 0 {
+		leftoverItems := count % itemsPerPage
+		return model.AllReceiptsPages{
+			NumberOfPages: numberOfPages,
+			LeftoverItems: leftoverItems,
+		}, nil
+	}
+
+	numberOfPages++
+	return model.AllReceiptsPages{
+		NumberOfPages: numberOfPages,
+		LeftoverItems: 0,
+	}, nil
+}

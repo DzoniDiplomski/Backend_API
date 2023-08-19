@@ -17,3 +17,18 @@ var PSCreateReceiptItem = "INSERT INTO stavka (kol, zaprima_sadrzi_4_artikal_sif
 var PSBindItemWithReceipt = "INSERT INTO sadrzi_3 (fiskalni_racun_id, stavka_id) VALUES ($1, $2)"
 var PSBindReceiptWithCashier = "INSERT INTO izdaje (id_racuna, jmbg_kasira) VALUES ($1, $2)"
 var PSDeleteReceipt = "DELETE FROM fiskalni_racun WHERE id = $1"
+var PSGetAllReceipts = `
+SELECT
+	fr.id,
+	fr.createdAt,
+	t.naz AS trafika_naz,
+	z.ime AS zaposleni_ime,
+	z.prz AS zaposleni_prz
+FROM fiskalni_racun fr
+JOIN trafika t ON fr.radi_kasa_trafika_id = t.id
+LEFT JOIN izdaje i ON fr.id = i.id_racuna
+LEFT JOIN zaposleni z ON i.jmbg_kasira = z.jmbg
+LIMIT $1
+OFFSET $2;
+`
+var PSCountAllReceipts = "SELECT COUNT(*) FROM fiskalni_racun"
