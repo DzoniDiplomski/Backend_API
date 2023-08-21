@@ -18,4 +18,6 @@ func initReceiptHandlerRoutes(r *gin.Engine) {
 	r.POST("/addReceipt", handler.CreateReceipt)
 	r.GET("/getAllReceipts", handler.GetReceipts)
 	r.GET("/calculatePages", handler.CalculatePagesForAllReceipts)
+	r.GET("/getAllInvoices", handler.GetInvoices)
+	r.GET("/calculateInvoicePages", handler.CalculatePagesForAllInvoices)
 }
