@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/DzoniDiplomski/Backend_API/converter"
+	"github.com/DzoniDiplomski/Backend_API/db"
 	"github.com/DzoniDiplomski/Backend_API/model"
 	"github.com/DzoniDiplomski/Backend_API/repo"
 )
@@ -17,10 +18,28 @@ func (requisitionService *RequisitionService) CreateRequisition(requisition mode
 		return err
 	}
 
+	err = addItemsToDBAndBindWithRequisition(id, requisition.Products)
+	if err != nil {
+		requisitionRepo.Delete(id)
+		return err
+	}
+	return nil
 }
 
-func (requisitionService *RequisitionService) createRequisitionItem(products []model.Product) {
-	for _, product := range products {
-
+func addItemsToDBAndBindWithRequisition(id int64, products []model.Product) error {
+	tx, err := db.DBConn.Begin()
+	if err != nil {
+		return err
 	}
+
+	for _, product := range products {
+		_, err := tx.Exec(db.PSCreateRequisitionItem, product.Name, product.Quantity, id)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	tx.Commit()
+	return nil
 }

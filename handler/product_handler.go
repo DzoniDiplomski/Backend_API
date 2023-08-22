@@ -14,7 +14,7 @@ func AddProduct(c *gin.Context) {
 	var products []model.Product
 
 	if err := c.BindJSON(&products); err != nil {
-		c.Status(400)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -36,4 +36,20 @@ func SearchProducts(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, products)
+}
+
+func UpdateProductPrice(c *gin.Context) {
+	var price model.ProductDTO
+
+	if err := c.BindJSON(&price); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := productService.UpdateProductPrice(price); err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.String(http.StatusCreated, "Price updated")
 }

@@ -15,4 +15,5 @@ func initRoutes(r *gin.Engine) {
 	initAuthHandlerRoutes(r)
 	initProductHandlerRoutes(r)
 	initReceiptHandlerRoutes(r)
+	initRequisitionHandlerRoutes(r)
 }

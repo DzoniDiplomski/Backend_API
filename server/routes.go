@@ -12,6 +12,7 @@ func initAuthHandlerRoutes(r *gin.Engine) {
 func initProductHandlerRoutes(r *gin.Engine) {
 	r.POST("/addProducts", handler.AddProduct)
 	r.GET("/getProducts", handler.SearchProducts)
+	r.PUT("/updatePrice", handler.UpdateProductPrice)
 }
 
 func initReceiptHandlerRoutes(r *gin.Engine) {
@@ -20,4 +21,8 @@ func initReceiptHandlerRoutes(r *gin.Engine) {
 	r.GET("/calculatePages", handler.CalculatePagesForAllReceipts)
 	r.GET("/getAllInvoices", handler.GetInvoices)
 	r.GET("/calculateInvoicePages", handler.CalculatePagesForAllInvoices)
+}
+
+func initRequisitionHandlerRoutes(r *gin.Engine) {
+	r.POST("/addRequisition", handler.CreateRequisition)
 }

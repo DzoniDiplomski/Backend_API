@@ -6,11 +6,12 @@ var PSSearchProducts = `
 SELECT a."sif", a."naz", a."bc", a."kolicina", c."cena"
 FROM "artikal" a
 INNER JOIN "sadrzi_5" s ON a."sif" = s."artikal_sif"
-INNER JOIN "ima_cenu" ic ON s."sadrzi_5_id" = ic."sadrzi_5_id"
+INNER JOIN "ima_cenu" ic ON s."sadrzi_5_id" = ic."sif"
 INNER JOIN "cenovnik" c ON ic."cenovnik_id_cen" = c."id_cen"
 WHERE c."pocetak_vazenja" <= CURRENT_DATE 
   AND c."kraj_vazenja" >= CURRENT_DATE
-  AND a."naz" ILIKE $1;
+  AND a."naz" ILIKE $1
+  AND ic."status" = true;
 `
 var PSAddReceipt = "INSERT INTO fiskalni_racun (radi_kasa_trafika_id, radi_kasa_id) VALUES ($1, $2) RETURNING id"
 var PSAddInvoice = "INSERT INTO gotovinski_racun (radi_kasa_trafika_id, radi_kasa_id) VALUES ($1, $2) RETURNING id"
@@ -52,6 +53,13 @@ OFFSET $2;
 `
 var PSCountAllReceipts = "SELECT COUNT(*) FROM fiskalni_racun"
 var PSCountAllInvoices = "SELECT COUNT(*) FROM gotovinski_racun"
-var PSAddRequisition = "INSERT INTO trebovanje (poslovodja_jmbg) VALUES $1 RETURNING broj_trebovanja"
+var PSAddRequisition = "INSERT INTO trebovanje (poslovodja_jmbg) VALUES ($1) RETURNING broj_trebovanja"
 var PSDeleteRequisition = "DELETE FROM trebovanje WHERE poslovodja_jmbg = $1"
-var 
+var PSCreateRequisitionItem = "INSERT INTO stavka_trebovanja (naz, kol, broj_trebovanja) VALUES ($1, $2, $3) RETURNING id"
+var PSReduceItemQuantity = "UPDATE sadrzi_5 SET kolicina = kolicina - $1 WHERE artikal_sif = $2;"
+var PSUpdateProductPrice = "INSERT INTO cenovnik (cena, pocetak_vazenja, kraj_vazenja) VALUES ($1, $2, $3) RETURNING id_cen"
+var PSBindPriceWithProduct = "INSERT INTO ima_cenu (cenovnik_id_cen, sif, status) VALUES ($1, $2, $3)"
+var PSRevokeAllPrices = `UPDATE ima_cenu
+SET status = false
+WHERE sif = $1 AND cenovnik_id_cen <> $2;
+`

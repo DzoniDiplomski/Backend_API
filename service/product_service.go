@@ -41,3 +41,33 @@ func (productService *ProductService) SearchForProducts(searchString string) ([]
 
 	return products, nil
 }
+
+func (productService *ProductService) UpdateProductPrice(price model.ProductDTO) error {
+	tx, err := db.DBConn.Begin()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	var priceId int64
+	err = tx.QueryRow(db.PSUpdateProductPrice, price.Price, price.StartDate, price.EndDate).Scan(&priceId)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	_, err = tx.Exec(db.PSBindPriceWithProduct, priceId, price.Id, true)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	_, err = tx.Exec(db.PSRevokeAllPrices, price.Id, priceId)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	tx.Commit()
+	return nil
+}

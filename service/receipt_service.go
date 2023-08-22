@@ -83,6 +83,19 @@ func addItemsToDBAndBindWithReceipt(receipt model.ReceiptDTO, tx *sql.Tx, receip
 		if err != nil {
 			return err
 		}
+
+		err = reduceItemQuantityInDB(product.Quantity, product.Id, tx)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func reduceItemQuantityInDB(quantity, itemId int, tx *sql.Tx) error {
+	_, err := tx.Exec(db.PSReduceItemQuantity, quantity, itemId)
+	if err != nil {
+		return err
 	}
 	return nil
 }

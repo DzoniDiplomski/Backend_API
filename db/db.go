@@ -12,7 +12,7 @@ var DBConn *sql.DB
 
 func SetupDB() {
 	var err error
-	DBConn, err = sql.Open("postgres", "postgres://postgres:postgres@localhost:5432/diplomski?sslmode=disable")
+	DBConn, err = sql.Open("postgres", os.Getenv("POSTGRES_CONNECTION"))
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(1)
