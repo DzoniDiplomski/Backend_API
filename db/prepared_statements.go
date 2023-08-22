@@ -52,3 +52,5 @@ OFFSET $2;
 `
 var PSCountAllReceipts = "SELECT COUNT(*) FROM fiskalni_racun"
 var PSCountAllInvoices = "SELECT COUNT(*) FROM gotovinski_racun"
+var PSAddRequisition = "INSERT INTO trebovanje (poslovodja_jmbg) VALUES $1 RETURNING broj_trebovanja"
+var PSDeleteRequisition = "DELETE FROM trebovanje WHERE poslovodja_jmbg = $1"
