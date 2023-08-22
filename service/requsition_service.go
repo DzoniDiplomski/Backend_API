@@ -11,6 +11,16 @@ type RequisitionService struct {
 
 var requisitionRepo = repo.RequisitionRepo{}
 
-func (requisitionService *RequisitionService) CreateRequisition(requisition model.RequisitionDTO) {
+func (requisitionService *RequisitionService) CreateRequisition(requisition model.RequisitionDTO) error {
 	id, err := requisitionRepo.Create(converter.FromDTORequisition(requisition))
+	if err != nil {
+		return err
+	}
+
+}
+
+func (requisitionService *RequisitionService) createRequisitionItem(products []model.Product) {
+	for _, product := range products {
+
+	}
 }
