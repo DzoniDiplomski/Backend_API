@@ -53,3 +53,7 @@ func UpdateProductPrice(c *gin.Context) {
 
 	c.String(http.StatusCreated, "Price updated")
 }
+
+func GetProductPriceStats(c *gin.Context) {
+
+}

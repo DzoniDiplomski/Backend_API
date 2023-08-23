@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/DzoniDiplomski/Backend_API/handler"
+	"github.com/DzoniDiplomski/Backend_API/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,20 +10,30 @@ func initAuthHandlerRoutes(r *gin.Engine) {
 	r.POST("/login", handler.Login)
 }
 
-func initProductHandlerRoutes(r *gin.Engine) {
-	r.POST("/addProducts", handler.AddProduct)
-	r.GET("/getProducts", handler.SearchProducts)
-	r.PUT("/updatePrice", handler.UpdateProductPrice)
+func initCashierRoutes(r *gin.Engine) {
+	cashierGroup := r.Group("/cashier")
+	cashierGroup.Use(middleware.CashierMiddleware)
+	cashierGroup.GET("/getProducts", handler.SearchProducts)
+	cashierGroup.POST("/addReceipt", handler.CreateReceipt)
+	cashierGroup.GET("/getAllReceipts", handler.GetReceipts)
+	cashierGroup.GET("/calculatePages", handler.CalculatePagesForAllReceipts)
+	cashierGroup.GET("/getAllInvoices", handler.GetInvoices)
+	cashierGroup.GET("/calculateInvoicePages", handler.CalculatePagesForAllInvoices)
 }
 
-func initReceiptHandlerRoutes(r *gin.Engine) {
-	r.POST("/addReceipt", handler.CreateReceipt)
-	r.GET("/getAllReceipts", handler.GetReceipts)
-	r.GET("/calculatePages", handler.CalculatePagesForAllReceipts)
-	r.GET("/getAllInvoices", handler.GetInvoices)
-	r.GET("/calculateInvoicePages", handler.CalculatePagesForAllInvoices)
+func initManagerRoutes(r *gin.Engine) {
+	managerGroup := r.Group("/manager")
+	managerGroup.Use(middleware.ManagerMiddleware)
+	managerGroup.POST("/addRequisition", handler.CreateRequisition)
+	managerGroup.PUT("/updatePrice", handler.UpdateProductPrice)
 }
 
-func initRequisitionHandlerRoutes(r *gin.Engine) {
-	r.POST("/addRequisition", handler.CreateRequisition)
+func initStorageWorkerRoutes(r *gin.Engine) {
+	storageWorkerGroup := r.Group("/storageWorker")
+	storageWorkerGroup.Use(middleware.ManagerMiddleware)
+	storageWorkerGroup.POST("/addProducts")
+}
+
+func initDailyMarketRoutes(r *gin.Engine) {
+	r.GET("/getDailyMarket", handler.GetDailyMarket)
 }

@@ -1,6 +1,10 @@
 package db
 
-var PSCheckForUsernameAndPasswordCombination = "SELECT username, password, Id FROM nalog WHERE username = $1 AND password = $2"
+var PSCheckForUsernameAndPasswordCombination = `SELECT n.username, n.password, n.Id, z.spec
+FROM nalog n
+JOIN zaposleni z ON n.zaposleni_jmbg = z.jmbg
+WHERE n.username = $1 AND n.password = $2;
+`
 var PSAddProducts = "INSERT INTO artikal (sif, bc, naz, kolicina) VALUES ($1, $2, $3, $4)"
 var PSSearchProducts = `
 SELECT a."sif", a."naz", a."bc", a."kolicina", c."cena"
@@ -33,6 +37,7 @@ FROM fiskalni_racun fr
 JOIN trafika t ON fr.radi_kasa_trafika_id = t.id
 LEFT JOIN izdaje i ON fr.id = i.id_racuna
 LEFT JOIN zaposleni z ON i.jmbg_kasira = z.jmbg
+WHERE fr.createdAt::date = CURRENT_DATE
 LIMIT $1
 OFFSET $2;
 `
@@ -48,11 +53,12 @@ FROM gotovinski_racun gr
 JOIN trafika t ON gr.radi_kasa_trafika_id = t.id
 LEFT JOIN izdaje_2 i ON gr.id = i.gotovinski_racun_id
 LEFT JOIN zaposleni z ON i.jmbg_kasira = z.jmbg
+WHERE gr.createdAt::date = CURRENT_DATE
 LIMIT $1
 OFFSET $2;
 `
-var PSCountAllReceipts = "SELECT COUNT(*) FROM fiskalni_racun"
-var PSCountAllInvoices = "SELECT COUNT(*) FROM gotovinski_racun"
+var PSCountAllReceipts = "SELECT COUNT(*) FROM fiskalni_racun WHERE createdAt::date = CURRENT_DATE"
+var PSCountAllInvoices = "SELECT COUNT(*) FROM gotovinski_racun WHERE createdAt::date = CURRENT_DATE"
 var PSAddRequisition = "INSERT INTO trebovanje (poslovodja_jmbg) VALUES ($1) RETURNING broj_trebovanja"
 var PSDeleteRequisition = "DELETE FROM trebovanje WHERE poslovodja_jmbg = $1"
 var PSCreateRequisitionItem = "INSERT INTO stavka_trebovanja (naz, kol, broj_trebovanja) VALUES ($1, $2, $3) RETURNING id"
@@ -63,3 +69,12 @@ var PSRevokeAllPrices = `UPDATE ima_cenu
 SET status = false
 WHERE sif = $1 AND cenovnik_id_cen <> $2;
 `
+var PSAddSumToReceipt = `UPDATE fiskalni_racun SET suma = $1 WHERE id = $2`
+var PSAddSumToInvoice = `UPDATE gotovinski_racun SET suma = $1 WHERE id = $2`
+var PSGetTodaysMarket = `SELECT * from dnevni_pazar WHERE datum = CURRENT_DATE`
+var PSCreateTodaysMarket = `INSERT INTO dnevni_pazar DEFAULT VALUES  RETURNING id`
+var PSUpdateTodaysMarketSum = `UPDATE dnevni_pazar SET suma = suma + $1 WHERE id = $2`
+var PSGetProductPricesOverTime = `SELECT c.cena, c.pocetak_vazenja, c.kraj_vazenja
+FROM ima_cenu ic
+JOIN cenovnik c ON ic.cenovnik_id_cen = c.id_cen
+WHERE ic.sif = $1;`

@@ -7,10 +7,11 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-func GenerateJWT(id int) string {
+func GenerateJWT(id int, role string) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":  id,
-		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"id":   id,
+		"role": role,
+		"exp":  time.Now().Add(time.Hour * 24).Unix(),
 	})
 
 	tokenString, _ := token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))

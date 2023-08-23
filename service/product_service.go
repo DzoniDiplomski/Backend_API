@@ -71,3 +71,16 @@ func (productService *ProductService) UpdateProductPrice(price model.ProductDTO)
 	tx.Commit()
 	return nil
 }
+
+func (productService *ProductService) GetProductPriceStats(id int64) error {
+	rows, err := db.DBConn.Query(db.PSGetProductPricesOverTime, id)
+	if err != nil {
+		return err
+	}
+
+	for rows.Next() {
+
+	}
+
+	return nil
+}

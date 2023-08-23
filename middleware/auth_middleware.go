@@ -26,3 +26,39 @@ func AuthMiddleware(c *gin.Context) {
 
 	c.Next()
 }
+
+func CashierMiddleware(c *gin.Context) {
+	role := c.GetHeader("role")
+
+	if role != "KASIR" {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "You are not authorized to do this!"})
+		c.Abort()
+		return
+	}
+
+	c.Next()
+}
+
+func ManagerMiddleware(c *gin.Context) {
+	role := c.GetHeader("role")
+
+	if role != "POSLOVODJA" {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "You are not authorized to do this!"})
+		c.Abort()
+		return
+	}
+
+	c.Next()
+}
+
+func StorageWorkerMiddleware(c *gin.Context) {
+	role := c.GetHeader("role")
+
+	if role != "MAGACIONER" {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "You are not authorized to do this!"})
+		c.Abort()
+		return
+	}
+
+	c.Next()
+}
