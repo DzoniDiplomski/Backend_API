@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/DzoniDiplomski/Backend_API/model"
 	"github.com/DzoniDiplomski/Backend_API/service"
@@ -23,4 +24,26 @@ func CreateRequisition(c *gin.Context) {
 	}
 
 	c.Status(http.StatusCreated)
+}
+
+func GetRequisitions(c *gin.Context) {
+	requisitions, err := requisitionService.GetRequisitions()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	c.JSON(http.StatusOK, requisitions)
+}
+
+func GetRequisitionItems(c *gin.Context) {
+	requisitionIdString := c.Query("id")
+	requisitionId, _ := strconv.ParseInt(requisitionIdString, 10, 64)
+
+	requisitionItems, err := requisitionService.GetRequisitionItems(requisitionId)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, requisitionItems)
 }

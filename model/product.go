@@ -8,6 +8,11 @@ type Product struct {
 	Quantity int     `json:"kolicina"`
 }
 
+type ProductRequisitionDTO struct {
+	Name     string `json:"name"`
+	Quantity int    `json:"quantity"`
+}
+
 type ProductDTO struct {
 	Id        int     `json:"sif"`
 	Price     float64 `json:"cena"`

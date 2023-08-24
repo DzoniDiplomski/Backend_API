@@ -23,14 +23,19 @@ func initCashierRoutes(r *gin.Engine) {
 
 func initManagerRoutes(r *gin.Engine) {
 	managerGroup := r.Group("/manager")
-	managerGroup.Use(middleware.ManagerMiddleware)
+	// managerGroup.Use(middleware.ManagerMiddleware)
 	managerGroup.POST("/addRequisition", handler.CreateRequisition)
 	managerGroup.PUT("/updatePrice", handler.UpdateProductPrice)
+	managerGroup.GET("/priceStats", handler.GetProductPriceStats)
+	managerGroup.GET("/getRequisitions", handler.GetRequisitions)
+	managerGroup.GET("/getRequisitionItems", handler.GetRequisitionItems)
+	managerGroup.GET("/getAcquisitions", handler.GetAcquisitions)
+	managerGroup.GET("/openAcquisition", handler.OpenAcquisition)
 }
 
 func initStorageWorkerRoutes(r *gin.Engine) {
 	storageWorkerGroup := r.Group("/storageWorker")
-	storageWorkerGroup.Use(middleware.ManagerMiddleware)
+	storageWorkerGroup.Use(middleware.StorageWorkerMiddleware)
 	storageWorkerGroup.POST("/addProducts")
 }
 

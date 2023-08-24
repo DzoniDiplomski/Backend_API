@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/DzoniDiplomski/Backend_API/model"
 	"github.com/DzoniDiplomski/Backend_API/service"
@@ -55,5 +56,19 @@ func UpdateProductPrice(c *gin.Context) {
 }
 
 func GetProductPriceStats(c *gin.Context) {
+	productIdString := c.Query("id")
+	productId, err := strconv.ParseInt(productIdString, 10, 64)
 
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	prices, err := productService.GetProductPriceStats(productId)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, prices)
 }

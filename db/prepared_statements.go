@@ -78,3 +78,11 @@ var PSGetProductPricesOverTime = `SELECT c.cena, c.pocetak_vazenja, c.kraj_vazen
 FROM ima_cenu ic
 JOIN cenovnik c ON ic.cenovnik_id_cen = c.id_cen
 WHERE ic.sif = $1;`
+var PSGetAllRequisitions = `
+SELECT t.broj_trebovanja, t.createdAt
+FROM trebovanje t
+`
+var PSGetRequisitionItems = `
+SELECT st.kol, st.naz
+FROM stavka_trebovanja st
+WHERE broj_trebovanja = $1`

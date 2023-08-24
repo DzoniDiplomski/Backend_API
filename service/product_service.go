@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/DzoniDiplomski/Backend_API/db"
 	"github.com/DzoniDiplomski/Backend_API/model"
@@ -72,15 +73,32 @@ func (productService *ProductService) UpdateProductPrice(price model.ProductDTO)
 	return nil
 }
 
-func (productService *ProductService) GetProductPriceStats(id int64) error {
+func (productService *ProductService) GetProductPriceStats(id int64) ([]map[string]interface{}, error) {
 	rows, err := db.DBConn.Query(db.PSGetProductPricesOverTime, id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
+	var prices []map[string]interface{}
 	for rows.Next() {
+		var price float64
+		var startDate, endDate string
+		err := rows.Scan(&price, &startDate, &endDate)
+		if err != nil {
+			return nil, err
+		}
 
+		startDate = strings.Split(startDate, "T")[0]
+		endDate = strings.Split(endDate, "T")[0]
+
+		priceInterval := map[string]interface{}{
+			"price":     price,
+			"startDate": startDate,
+			"endDate":   endDate,
+		}
+
+		prices = append(prices, priceInterval)
 	}
 
-	return nil
+	return prices, nil
 }
