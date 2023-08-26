@@ -86,3 +86,11 @@ var PSGetRequisitionItems = `
 SELECT st.kol, st.naz
 FROM stavka_trebovanja st
 WHERE broj_trebovanja = $1`
+var PSGetReceiptItems = `
+SELECT a."sif", a."naz", s."kol", s."cena"
+FROM fiskalni_racun fr
+JOIN sadrzi_3 s3 ON fr."id" = s3."fiskalni_racun_id"
+JOIN stavka s ON s3."stavka_id" = s."id"
+JOIN artikal a ON s."zaprima_sadrzi_4_artikal_sif" = a."sif"
+WHERE fr."id" = $1;
+`

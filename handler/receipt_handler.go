@@ -86,3 +86,16 @@ func CalculatePagesForAllInvoices(c *gin.Context) {
 
 	c.JSON(http.StatusOK, pageStructure)
 }
+
+func GetReceiptItems(c *gin.Context) {
+	receiptIdStr := c.Query("id")
+
+	receiptId, _ := strconv.ParseInt(receiptIdStr, 10, 64)
+
+	items, err := receiptService.GetReceiptItems(receiptId)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}

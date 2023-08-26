@@ -15,6 +15,26 @@ type ReceiptService struct {
 
 var receiptRepo = &repo.ReceiptRepo{}
 
+func (receiptService *ReceiptService) GetReceiptItems(receiptId int64) ([]model.Product, error) {
+	rows, err := db.DBConn.Query(db.PSGetReceiptItems, receiptId)
+	if err != nil {
+		return nil, err
+	}
+
+	var (
+		product model.Product
+		items   []model.Product
+	)
+	for rows.Next() {
+		err := rows.Scan(&product.Id, &product.Name, &product.Quantity, &product.Price)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, product)
+	}
+	return items, nil
+}
+
 func (receiptService *ReceiptService) CreateReceipt(receipt model.ReceiptDTO) error {
 	tx, err := db.DBConn.Begin()
 	if err != nil {

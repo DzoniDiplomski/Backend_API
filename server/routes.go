@@ -12,13 +12,14 @@ func initAuthHandlerRoutes(r *gin.Engine) {
 
 func initCashierRoutes(r *gin.Engine) {
 	cashierGroup := r.Group("/cashier")
-	cashierGroup.Use(middleware.CashierMiddleware)
+	// cashierGroup.Use(middleware.CashierMiddleware)
 	cashierGroup.GET("/getProducts", handler.SearchProducts)
 	cashierGroup.POST("/addReceipt", handler.CreateReceipt)
 	cashierGroup.GET("/getAllReceipts", handler.GetReceipts)
 	cashierGroup.GET("/calculatePages", handler.CalculatePagesForAllReceipts)
 	cashierGroup.GET("/getAllInvoices", handler.GetInvoices)
 	cashierGroup.GET("/calculateInvoicePages", handler.CalculatePagesForAllInvoices)
+	cashierGroup.GET("/getReceiptItems", handler.GetReceiptItems)
 }
 
 func initManagerRoutes(r *gin.Engine) {
