@@ -93,4 +93,5 @@ JOIN sadrzi_3 s3 ON fr."id" = s3."fiskalni_racun_id"
 JOIN stavka s ON s3."stavka_id" = s."id"
 JOIN artikal a ON s."zaprima_sadrzi_4_artikal_sif" = a."sif"
 WHERE fr."id" = $1;
-`
+`var PSCreateCalculation =
+``

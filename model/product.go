@@ -19,3 +19,11 @@ type ProductDTO struct {
 	StartDate string  `json:"pocetak_vazenja"`
 	EndDate   string  `json:"kraj_vazenja"`
 }
+
+type CalculationProductDTO struct {
+	Id       int64   `json:"sif"`
+	Neto     float64 `json:"neto"`
+	Margin   float32 `json:"margin"`
+	Quantity int     `json:"quantity"`
+	Pdv      int     `json:"pdv"`
+}
