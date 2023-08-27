@@ -31,5 +31,7 @@ func Login(c *gin.Context) {
 	}
 
 	tokenString := utils.GenerateJWT(account.Id, account.Role)
-	c.String(200, tokenString)
+	c.JSON(200, gin.H{
+		"token": tokenString,
+	})
 }

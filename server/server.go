@@ -1,12 +1,17 @@
 package server
 
 import (
+	"github.com/DzoniDiplomski/Backend_API/middleware"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func RunServer() {
 	r := gin.Default()
-	// r.Use(middleware.AuthMiddleware)
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"}
+	r.Use(cors.New(config))
+	r.Use(middleware.AuthMiddleware)
 	initRoutes(r)
 	r.Run(":8080")
 }
