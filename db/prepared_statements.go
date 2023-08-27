@@ -63,6 +63,7 @@ var PSAddRequisition = "INSERT INTO trebovanje (poslovodja_jmbg) VALUES ($1) RET
 var PSDeleteRequisition = "DELETE FROM trebovanje WHERE poslovodja_jmbg = $1"
 var PSCreateRequisitionItem = "INSERT INTO stavka_trebovanja (naz, kol, broj_trebovanja) VALUES ($1, $2, $3) RETURNING id"
 var PSReduceItemQuantity = "UPDATE sadrzi_5 SET kolicina = kolicina - $1 WHERE artikal_sif = $2;"
+var PSIncreaseItemQuantity = "UPDATE sadrzi_5 SET kolicina = kolicina + $1 WHERE artikal_sif = $2;"
 var PSUpdateProductPrice = "INSERT INTO cenovnik (cena, pocetak_vazenja, kraj_vazenja) VALUES ($1, $2, $3) RETURNING id_cen"
 var PSBindPriceWithProduct = "INSERT INTO ima_cenu (cenovnik_id_cen, sif, status) VALUES ($1, $2, $3)"
 var PSRevokeAllPrices = `UPDATE ima_cenu
@@ -93,5 +94,5 @@ JOIN sadrzi_3 s3 ON fr."id" = s3."fiskalni_racun_id"
 JOIN stavka s ON s3."stavka_id" = s."id"
 JOIN artikal a ON s."zaprima_sadrzi_4_artikal_sif" = a."sif"
 WHERE fr."id" = $1;
-`var PSCreateCalculation =
-``
+`
+var PSCreateCalculation = `INSERT INTO kalkulacija DEFAULT VALUES RETURNING id`
