@@ -5,7 +5,7 @@ FROM nalog n
 JOIN zaposleni z ON n.zaposleni_jmbg = z.jmbg
 WHERE n.username = $1 AND n.password = $2;
 `
-var PSAddProducts = "INSERT INTO artikal (sif, bc, naz, kolicina) VALUES ($1, $2, $3, $4)"
+var PSAddProducts = "INSERT INTO artikal (sif, bc, naz, kolicina) VALUES ($1, $2, $3, $4) RETURNING sif"
 var PSSearchProducts = `
 SELECT a."sif", a."naz", a."bc", a."kolicina", c."cena"
 FROM "artikal" a
@@ -96,3 +96,13 @@ JOIN artikal a ON s."zaprima_sadrzi_4_artikal_sif" = a."sif"
 WHERE fr."id" = $1;
 `
 var PSCreateCalculation = `INSERT INTO kalkulacija DEFAULT VALUES RETURNING id`
+var PSCreateCalculationItem = `INSERT INTO stavka_kalkulacije (sif, neto_cena, marza, kolicina, pdv_stopa) VALUES ($1, $2, $3, $4, $5) RETURNING id`
+var PSBindCalculationItemWithCalculation = `
+INSERT INTO sadrzi_6 (id_kalkulacije, id_stavke) VALUES ($1, $2)`
+var PSAddProductToStorage = `
+INSERT INTO sadrzi_5 (artikal_sif) VALUES ($1)
+`
+var PSGetAllCalculations = `
+SELECT * FROM kalkulacije`
+var PSCountAllCalculations = `SELECT COUNT(*) FROM kalkulacija
+`

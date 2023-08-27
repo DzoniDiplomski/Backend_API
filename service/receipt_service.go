@@ -202,7 +202,6 @@ func (receiptService *ReceiptService) GetReceiptsWithLimit(offset int, limit int
 	for rows.Next() {
 		var receipt model.AllReceiptsDTO
 		if err := rows.Scan(&receipt.Id, &receipt.CreatedAt, &receipt.ShopName, &receipt.CashierName, &receipt.CashierLastName); err != nil {
-			fmt.Println(receipt)
 			return nil, err
 		}
 		receipts = append(receipts, receipt)
