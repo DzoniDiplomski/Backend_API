@@ -8,26 +8,26 @@ import (
 type ProductRepo struct {
 }
 
-func (productRepo *ProductRepo) AddProducts(products []model.Product) ([]int64, error) {
+func (productRepo *ProductRepo) AddProducts(products []model.Product) error {
 	tx, err := db.DBConn.Begin()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	var (
-		productId  int64
-		productIds []int64
-	)
 	for _, p := range products {
-
-		err := tx.QueryRow(db.PSAddProducts, p.Id, p.Barcode, p.Name, 0).Scan(&productId)
+		_, err := tx.Exec(db.PSAddProducts, p.Id, p.Barcode, p.Name)
 		if err != nil {
 			tx.Rollback()
-			return nil, err
+			return err
 		}
-		productIds = append(productIds, productId)
+
+		_, err = tx.Exec(db.PSAddProductToStorage, p.Id, 1, p.Quantity)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
 	}
 
 	tx.Commit()
-	return productIds, nil
+	return nil
 }

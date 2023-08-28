@@ -15,26 +15,7 @@ type ProductService struct {
 var productRepo = &repo.ProductRepo{}
 
 func (productService *ProductService) AddProducts(products []model.Product) error {
-	productIds, err := productRepo.AddProducts(products)
-	if err != nil {
-		return err
-	}
-
-	tx, err := db.DBConn.Begin()
-	if err != nil {
-		return err
-	}
-
-	for _, id := range productIds {
-		_, err := tx.Exec(db.PSAddProductToStorage, id)
-		if err != nil {
-			tx.Rollback()
-			return err
-		}
-	}
-
-	tx.Commit()
-	return nil
+	return productRepo.AddProducts(products)
 }
 
 func (productService *ProductService) SearchForProducts(searchString string) ([]model.Product, error) {

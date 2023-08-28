@@ -1,13 +1,13 @@
 package db
 
-var PSCheckForUsernameAndPasswordCombination = `SELECT n.username, n.password, n.Id, z.spec
+var PSCheckForUsernameAndPasswordCombination = `SELECT n.username, n.password, n.zaposleni_jmbg, z.spec
 FROM nalog n
 JOIN zaposleni z ON n.zaposleni_jmbg = z.jmbg
 WHERE n.username = $1 AND n.password = $2;
 `
-var PSAddProducts = "INSERT INTO artikal (sif, bc, naz, kolicina) VALUES ($1, $2, $3, $4) RETURNING sif"
+var PSAddProducts = "INSERT INTO artikal (sif, bc, naz) VALUES ($1, $2, $3) RETURNING sif"
 var PSSearchProducts = `
-SELECT a."sif", a."naz", a."bc", a."kolicina", c."cena"
+SELECT a."sif", a."naz", a."bc", s."kolicina", c."cena"
 FROM "artikal" a
 INNER JOIN "sadrzi_5" s ON a."sif" = s."artikal_sif"
 INNER JOIN "ima_cenu" ic ON s."sadrzi_5_id" = ic."sif"
@@ -100,7 +100,7 @@ var PSCreateCalculationItem = `INSERT INTO stavka_kalkulacije (sif, neto_cena, m
 var PSBindCalculationItemWithCalculation = `
 INSERT INTO sadrzi_6 (id_kalkulacije, id_stavke) VALUES ($1, $2)`
 var PSAddProductToStorage = `
-INSERT INTO sadrzi_5 (artikal_sif) VALUES ($1)
+INSERT INTO sadrzi_5 (artikal_sif, magacin_id, kolicina) VALUES ($1, $2, $3)
 `
 var PSGetAllCalculations = `
 SELECT * FROM kalkulacije`

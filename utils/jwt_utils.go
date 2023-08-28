@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"os"
 	"time"
 
@@ -32,4 +33,19 @@ func CheckJWTValidity(jwtString string) bool {
 	}
 
 	return true
+}
+
+func DecodeJWT(token string) (jwt.MapClaims, error) {
+	jwtToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if claims, ok := jwtToken.Claims.(jwt.MapClaims); ok && jwtToken.Valid {
+		return claims, nil
+	}
+	return nil, errors.New("Failed to decode jwt token")
 }

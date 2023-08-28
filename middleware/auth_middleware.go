@@ -28,7 +28,16 @@ func AuthMiddleware(c *gin.Context) {
 }
 
 func CashierMiddleware(c *gin.Context) {
-	role := c.GetHeader("role")
+	jwtString := strings.TrimPrefix(c.GetHeader("Authorization"), "Bearer ")
+	claims, err := utils.DecodeJWT(jwtString)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Failed to decode the jwt token! Error: " + err.Error()})
+		c.Abort()
+		return
+	}
+
+	role := claims["role"]
 
 	if role != "KASIR" {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "You are not authorized to do this!"})

@@ -37,8 +37,8 @@ func initManagerRoutes(r *gin.Engine) {
 
 func initStorageWorkerRoutes(r *gin.Engine) {
 	storageWorkerGroup := r.Group("/storageWorker")
-	storageWorkerGroup.Use(middleware.StorageWorkerMiddleware)
-	storageWorkerGroup.POST("/addProducts")
+	// storageWorkerGroup.Use(middleware.StorageWorkerMiddleware)
+	storageWorkerGroup.POST("/addProducts", handler.AddProduct)
 }
 
 func initDailyMarketRoutes(r *gin.Engine) {
