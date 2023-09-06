@@ -99,3 +99,16 @@ func GetReceiptItems(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, items)
 }
+
+func GetInvoiceItems(c *gin.Context) {
+	invoiceIdStr := c.Query("id")
+
+	invoiceId, _ := strconv.ParseInt(invoiceIdStr, 10, 64)
+
+	items, err := receiptService.GetInvoiceItems(invoiceId)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}

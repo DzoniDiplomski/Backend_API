@@ -95,6 +95,13 @@ JOIN stavka s ON s3."stavka_id" = s."id"
 JOIN artikal a ON s."zaprima_sadrzi_4_artikal_sif" = a."sif"
 WHERE fr."id" = $1;
 `
+var PSGetInvoiceItems = `
+SELECT a."sif", a."naz", s."kol", s."cena"
+FROM gotovinski_racun gr
+JOIN sadrzi_2 s2 ON gr."id" = s2."gotovinski_racun_id"
+JOIN stavka s ON s2."stavka_id" = s."id"
+JOIN artikal a ON s."zaprima_sadrzi_4_artikal_sif" = a."sif"
+WHERE gr."id" = $1;`
 var PSCreateCalculation = `INSERT INTO kalkulacija DEFAULT VALUES RETURNING id`
 var PSCreateCalculationItem = `INSERT INTO stavka_kalkulacije (sif, neto_cena, marza, kolicina, pdv_stopa) VALUES ($1, $2, $3, $4, $5) RETURNING id`
 var PSBindCalculationItemWithCalculation = `

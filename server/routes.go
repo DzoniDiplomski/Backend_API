@@ -20,6 +20,7 @@ func initCashierRoutes(r *gin.Engine) {
 	cashierGroup.GET("/getAllInvoices", handler.GetInvoices)
 	cashierGroup.GET("/calculateInvoicePages", handler.CalculatePagesForAllInvoices)
 	cashierGroup.GET("/getReceiptItems", handler.GetReceiptItems)
+	cashierGroup.GET("/getInvoiceItems", handler.GetInvoiceItems)
 }
 
 func initManagerRoutes(r *gin.Engine) {

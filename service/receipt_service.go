@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/DzoniDiplomski/Backend_API/converter"
 	"github.com/DzoniDiplomski/Backend_API/db"
@@ -17,6 +18,26 @@ var receiptRepo = &repo.ReceiptRepo{}
 
 func (receiptService *ReceiptService) GetReceiptItems(receiptId int64) ([]model.Product, error) {
 	rows, err := db.DBConn.Query(db.PSGetReceiptItems, receiptId)
+	if err != nil {
+		return nil, err
+	}
+
+	var (
+		product model.Product
+		items   []model.Product
+	)
+	for rows.Next() {
+		err := rows.Scan(&product.Id, &product.Name, &product.Quantity, &product.Price)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, product)
+	}
+	return items, nil
+}
+
+func (receiptService *ReceiptService) GetInvoiceItems(invoiceId int64) ([]model.Product, error) {
+	rows, err := db.DBConn.Query(db.PSGetInvoiceItems, invoiceId)
 	if err != nil {
 		return nil, err
 	}
@@ -186,6 +207,13 @@ func (receiptService *ReceiptService) GetInvoicesWithLimit(offset int, limit int
 		if err := rows.Scan(&invoice.Id, &invoice.CreatedAt, &invoice.ShopName, &invoice.CashierName, &invoice.CashierLastName, &invoice.EIN); err != nil {
 			return nil, err
 		}
+		createdAtTime, err := time.Parse(time.RFC3339, invoice.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		formattedTime := createdAtTime.Format("02-01-2006 15:04")
+		invoice.CreatedAt = formattedTime
 		invoices = append(invoices, invoice)
 	}
 
@@ -204,6 +232,13 @@ func (receiptService *ReceiptService) GetReceiptsWithLimit(offset int, limit int
 		if err := rows.Scan(&receipt.Id, &receipt.CreatedAt, &receipt.ShopName, &receipt.CashierName, &receipt.CashierLastName); err != nil {
 			return nil, err
 		}
+		createdAtTime, err := time.Parse(time.RFC3339, receipt.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		formattedTime := createdAtTime.Format("02-01-2006 15:04")
+		receipt.CreatedAt = formattedTime
 		receipts = append(receipts, receipt)
 	}
 
