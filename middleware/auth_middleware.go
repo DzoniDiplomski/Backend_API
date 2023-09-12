@@ -48,10 +48,39 @@ func CashierMiddleware(c *gin.Context) {
 	c.Next()
 }
 
-func ManagerMiddleware(c *gin.Context) {
-	role := c.GetHeader("role")
+func CashierManagerMiddleware(c *gin.Context) {
+	jwtString := strings.TrimPrefix(c.GetHeader("Authorization"), "Bearer ")
+	claims, err := utils.DecodeJWT(jwtString)
 
-	if role != "POSLOVODJA" {
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Failed to decode the jwt token! Error: " + err.Error()})
+		c.Abort()
+		return
+	}
+
+	role := claims["role"]
+
+	if role == "KASIR" || role == "MENADZER" {
+		c.Next()
+		return
+	}
+
+	c.JSON(http.StatusUnauthorized, gin.H{"message": "You are not authorized to do this!"})
+	c.Abort()
+}
+
+func ManagerMiddleware(c *gin.Context) {
+	jwtString := strings.TrimPrefix(c.GetHeader("Authorization"), "Bearer ")
+	claims, err := utils.DecodeJWT(jwtString)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Failed to decode the jwt token! Error: " + err.Error()})
+		c.Abort()
+		return
+	}
+
+	role := claims["role"]
+	if role != "MENADZER" {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "You are not authorized to do this!"})
 		c.Abort()
 		return

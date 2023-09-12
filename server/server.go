@@ -19,6 +19,7 @@ func initRoutes(r *gin.Engine) {
 	initManagerRoutes(r)
 	initStorageWorkerRoutes(r)
 	initDailyMarketRoutes(r)
+	initCashierManagerRoutes(r)
 }
 
 func configCORS() gin.HandlerFunc {

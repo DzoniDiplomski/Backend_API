@@ -13,7 +13,6 @@ func initAuthHandlerRoutes(r *gin.Engine) {
 func initCashierRoutes(r *gin.Engine) {
 	cashierGroup := r.Group("/cashier")
 	cashierGroup.Use(middleware.CashierMiddleware)
-	cashierGroup.GET("/getProducts", handler.SearchProducts)
 	cashierGroup.POST("/addReceipt", handler.CreateReceipt)
 	cashierGroup.GET("/getAllReceipts", handler.GetReceipts)
 	cashierGroup.GET("/calculatePages", handler.CalculatePagesForAllReceipts)
@@ -21,6 +20,12 @@ func initCashierRoutes(r *gin.Engine) {
 	cashierGroup.GET("/calculateInvoicePages", handler.CalculatePagesForAllInvoices)
 	cashierGroup.GET("/getReceiptItems", handler.GetReceiptItems)
 	cashierGroup.GET("/getInvoiceItems", handler.GetInvoiceItems)
+}
+
+func initCashierManagerRoutes(r *gin.Engine) {
+	cashierManagerGroup := r.Group("/cashierManager")
+	cashierManagerGroup.Use(middleware.CashierManagerMiddleware)
+	cashierManagerGroup.GET("/getProducts", handler.SearchProducts)
 }
 
 func initManagerRoutes(r *gin.Engine) {
@@ -38,7 +43,7 @@ func initManagerRoutes(r *gin.Engine) {
 
 func initStorageWorkerRoutes(r *gin.Engine) {
 	storageWorkerGroup := r.Group("/storageWorker")
-	// storageWorkerGroup.Use(middleware.StorageWorkerMiddleware)
+	storageWorkerGroup.Use(middleware.StorageWorkerMiddleware)
 	storageWorkerGroup.POST("/addProducts", handler.AddProduct)
 }
 

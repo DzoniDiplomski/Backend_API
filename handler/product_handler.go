@@ -52,7 +52,9 @@ func UpdateProductPrice(c *gin.Context) {
 		return
 	}
 
-	c.String(http.StatusCreated, "Price updated")
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Price updated",
+	})
 }
 
 func GetProductPriceStats(c *gin.Context) {

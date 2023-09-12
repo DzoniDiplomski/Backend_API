@@ -10,7 +10,7 @@ var PSSearchProducts = `
 SELECT a."sif", a."naz", a."bc", s."kolicina", c."cena"
 FROM "artikal" a
 INNER JOIN "sadrzi_5" s ON a."sif" = s."artikal_sif"
-INNER JOIN "ima_cenu" ic ON s."sadrzi_5_id" = ic."sif"
+INNER JOIN "ima_cenu" ic ON s."artikal_sif" = ic."sif"
 INNER JOIN "cenovnik" c ON ic."cenovnik_id_cen" = c."id_cen"
 WHERE c."pocetak_vazenja" <= CURRENT_DATE 
   AND c."kraj_vazenja" >= CURRENT_DATE

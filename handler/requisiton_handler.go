@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/DzoniDiplomski/Backend_API/model"
@@ -17,6 +19,8 @@ func CreateRequisition(c *gin.Context) {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
+	jsonval, _ := json.Marshal(requisition)
+	os.WriteFile("gas.json", jsonval, 0666)
 
 	if err := requisitionService.CreateRequisition(requisition); err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
