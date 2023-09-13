@@ -35,8 +35,10 @@ func initManagerRoutes(r *gin.Engine) {
 	managerGroup.PUT("/updatePrice", handler.UpdateProductPrice)
 	managerGroup.GET("/priceStats", handler.GetProductPriceStats)
 	managerGroup.GET("/getRequisitions", handler.GetRequisitions)
+	managerGroup.GET("/calculateRequisitionPages", handler.CalculatePagesForAllRequisitions)
 	managerGroup.GET("/getRequisitionItems", handler.GetRequisitionItems)
 	managerGroup.GET("/getAcquisitions", handler.GetAcquisitions)
+	managerGroup.GET("/calculateAcquisitionPages", handler.CalculatePagesForAllAcquisitions)
 	managerGroup.GET("/openAcquisition", handler.OpenAcquisition)
 	managerGroup.POST("/createCalculation", handler.CreateCalculation)
 }

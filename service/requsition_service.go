@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"github.com/DzoniDiplomski/Backend_API/converter"
 	"github.com/DzoniDiplomski/Backend_API/db"
 	"github.com/DzoniDiplomski/Backend_API/model"
@@ -26,8 +28,8 @@ func (requisitionService *RequisitionService) CreateRequisition(requisition mode
 	return nil
 }
 
-func (requisitionService *RequisitionService) GetRequisitions() ([]model.AllRequisitionsDTO, error) {
-	rows, err := db.DBConn.Query(db.PSGetAllRequisitions)
+func (requisitionService *RequisitionService) GetRequisitions(offset int, limit int) ([]model.AllRequisitionsDTO, error) {
+	rows, err := db.DBConn.Query(db.PSGetAllRequisitions, limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -39,6 +41,13 @@ func (requisitionService *RequisitionService) GetRequisitions() ([]model.AllRequ
 		if err != nil {
 			return nil, err
 		}
+		createdAtTime, err := time.Parse(time.RFC3339, requisition.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		formattedTime := createdAtTime.Format("02-01-2006 15:04")
+		requisition.CreatedAt = formattedTime
 		requisitions = append(requisitions, requisition)
 	}
 	return requisitions, nil
@@ -78,4 +87,28 @@ func (requisitionService *RequisitionService) GetRequisitionItems(id int64) ([]m
 		items = append(items, item)
 	}
 	return items, nil
+}
+
+func (requisitionService *RequisitionService) CalculatePagesForAllRequisitions(itemsPerPage int) (model.AllReceiptsPages, error) {
+	var count int
+
+	err := db.DBConn.QueryRow(db.PSCountAllRequisitions).Scan(&count)
+	if err != nil {
+		return model.AllReceiptsPages{}, err
+	}
+
+	numberOfPages := count / itemsPerPage
+	if numberOfPages != 0 {
+		leftoverItems := count % itemsPerPage
+		return model.AllReceiptsPages{
+			NumberOfPages: numberOfPages,
+			LeftoverItems: leftoverItems,
+		}, nil
+	}
+
+	numberOfPages++
+	return model.AllReceiptsPages{
+		NumberOfPages: numberOfPages,
+		LeftoverItems: 0,
+	}, nil
 }

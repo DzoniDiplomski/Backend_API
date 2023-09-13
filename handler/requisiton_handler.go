@@ -31,12 +31,31 @@ func CreateRequisition(c *gin.Context) {
 }
 
 func GetRequisitions(c *gin.Context) {
-	requisitions, err := requisitionService.GetRequisitions()
+	pageStr := c.DefaultQuery("page", "1")
+	limitStr := c.DefaultQuery("limit", "10")
+
+	page, _ := strconv.Atoi(pageStr)
+	limit, _ := strconv.Atoi(limitStr)
+
+	offset := (page - 1) * limit
+	requisitions, err := requisitionService.GetRequisitions(offset, limit)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 	}
 
 	c.JSON(http.StatusOK, requisitions)
+}
+
+func CalculatePagesForAllRequisitions(c *gin.Context) {
+	itemsPerPageStr := c.DefaultQuery("items", "10")
+	itemsPerPage, _ := strconv.Atoi(itemsPerPageStr)
+
+	pageStructure, err := requisitionService.CalculatePagesForAllRequisitions(itemsPerPage)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	c.JSON(http.StatusOK, pageStructure)
 }
 
 func GetRequisitionItems(c *gin.Context) {

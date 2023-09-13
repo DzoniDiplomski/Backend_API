@@ -59,6 +59,7 @@ OFFSET $2;
 `
 var PSCountAllReceipts = "SELECT COUNT(*) FROM fiskalni_racun WHERE createdAt::date = CURRENT_DATE"
 var PSCountAllInvoices = "SELECT COUNT(*) FROM gotovinski_racun WHERE createdAt::date = CURRENT_DATE"
+var PSCountAllRequisitions = "SELECT COUNT(*) FROM trebovanje"
 var PSAddRequisition = "INSERT INTO trebovanje (poslovodja_jmbg) VALUES ($1) RETURNING broj_trebovanja"
 var PSDeleteRequisition = "DELETE FROM trebovanje WHERE poslovodja_jmbg = $1"
 var PSCreateRequisitionItem = "INSERT INTO stavka_trebovanja (naz, kol, broj_trebovanja) VALUES ($1, $2, $3) RETURNING id"
@@ -82,6 +83,9 @@ WHERE ic.sif = $1;`
 var PSGetAllRequisitions = `
 SELECT t.broj_trebovanja, t.createdAt
 FROM trebovanje t
+ORDER BY t.createdAt DESC
+LIMIT $1
+OFFSET $2;
 `
 var PSGetRequisitionItems = `
 SELECT st.kol, st.naz
